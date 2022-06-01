@@ -44,4 +44,10 @@ public class Account implements IQuestionnaire{
         if(user.isAdmin()) return questionnaire.getQuestions();
         else throw new IllegalAccessException("Unauthorized access");
     }
+
+    @Override
+    public String getName() throws IllegalAccessException {
+        if(user.isAdmin()) return questionnaire.getName();
+        else throw new IllegalAccessException("Unauthorized access");
+    }
 }

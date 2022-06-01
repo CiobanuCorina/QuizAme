@@ -3,8 +3,6 @@ package com.company;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import javax.naming.SizeLimitExceededException;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.*;
 
 public class TimedQuestionnaire extends QuestionnaireDecorator{

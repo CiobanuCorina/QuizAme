@@ -4,6 +4,7 @@ import com.company.Iterator.AnswersFactory;
 import com.company.Iterator.Iterator;
 import com.company.Iterator.IteratorFactory;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 import javax.naming.SizeLimitExceededException;
 import java.util.Hashtable;
@@ -34,6 +35,13 @@ public class Question{
     @JsonGetter(value = "answers")
     public Map.Entry[] getMap() {
         return answers.entrySet().toArray(new Map.Entry[]{});
+    }
+
+    @JsonSetter(value="answers")
+    public void setMap(Map.Entry[] entries) {
+        for (Map.Entry entry: entries) {
+            this.answers.put((String) entry.getKey(), (Boolean) entry.getValue());
+        }
     }
 
     public String getQuestionText() {

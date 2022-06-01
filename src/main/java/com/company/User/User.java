@@ -1,10 +1,5 @@
 package com.company.User;
 
-import com.company.Repositories.UserRepository;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
 public class User {
     private int id;
     private String username;
@@ -13,6 +8,14 @@ public class User {
     private UserRoles role;
 
     public User(String username, String password, String email, UserRoles role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+
+    public User(int id, String username, String password, String email, UserRoles role) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
@@ -37,6 +40,10 @@ public class User {
 
     public UserRoles getRole() {
         return role;
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override

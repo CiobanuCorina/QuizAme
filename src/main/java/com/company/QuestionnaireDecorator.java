@@ -36,4 +36,9 @@ public class QuestionnaireDecorator implements IQuestionnaire{
     public List<Question> getQuestions() throws IllegalAccessException {
         return wrappee.getQuestions();
     }
+
+    @Override
+    public String getName() throws IllegalAccessException {
+        return wrappee.getName();
+    }
 }

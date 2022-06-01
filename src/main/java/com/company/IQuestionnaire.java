@@ -11,4 +11,5 @@ public interface IQuestionnaire {
     void addQuestion(Question question) throws IllegalAccessException;
     void removeQuestion(int index) throws IllegalAccessException;
     List<Question> getQuestions() throws IllegalAccessException;
+    String getName() throws IllegalAccessException;
 }

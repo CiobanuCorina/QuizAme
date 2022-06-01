@@ -34,7 +34,8 @@ public class UserRepository {
         ResultSet resultSet = preparedStatement.executeQuery();
         resultSet.next();
         System.out.println(resultSet.getString("role"));
-        return new User(resultSet.getString("username"),
+        return new User(resultSet.getInt("id"),
+                resultSet.getString("username"),
                 resultSet.getString("password"),
                 resultSet.getString("email"),
                 UserRoles.valueOf(resultSet.getString("role")));
