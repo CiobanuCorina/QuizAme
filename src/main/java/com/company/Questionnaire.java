@@ -62,4 +62,8 @@ public class Questionnaire implements IQuestionnaire{
     public String getName() {
         return name;
     }
+
+    public int getId() {
+        return id;
+    }
 }

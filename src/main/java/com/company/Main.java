@@ -35,6 +35,10 @@ public class Main {
         events.subscribe("register email", emailSender);
         server.createContext("/register", (exchange -> {
             if ("POST".equals(exchange.getRequestMethod())) {
+                exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+                exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, OPTIONS, POST");
+                exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
+                OutputStream output;
                 ObjectMapper mapper = new ObjectMapper();
                 String text = new BufferedReader(
                         new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8))
@@ -42,6 +46,7 @@ public class Main {
                         .collect(Collectors.joining("\n"));
                 try {
                     Map map = mapper.readValue(text, Map.class);
+                    System.out.println(map.get("params"));
                     user = new User((String) map.get("username"),
                             (String) map.get("password"),
                             (String) map.get("email"),
@@ -49,21 +54,34 @@ public class Main {
                     UserRepository repository = new UserRepository(user);
                     if(repository.addUser()) {
                         user = repository.getUser((String) map.get("username"), (String) map.get("password"));
+                        String jsonUser = mapper.writeValueAsString(user);
+                        exchange.sendResponseHeaders(201, jsonUser.getBytes().length);
+                        output = exchange.getResponseBody();
+                        output.write(jsonUser.getBytes());
+                        output.flush();
                         events.notifyListeners("register email", user);
-                        exchange.sendResponseHeaders(201, -1);
                     } else {
                         exchange.sendResponseHeaders(400, -1);
                     }
                 } catch (IOException | SQLException e) {
                     e.printStackTrace();
                 }
-            } else {
+            } else if("OPTIONS".equals(exchange.getRequestMethod())) {
+                exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+                exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, OPTIONS, POST");
+                exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
+                exchange.sendResponseHeaders(200, -1);
+            }else {
                 exchange.sendResponseHeaders(405, -1);
             }
             exchange.close();
         }));
         server.createContext("/login", (exchange -> {
             if ("POST".equals(exchange.getRequestMethod())) {
+                OutputStream output;
+                exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+                exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, OPTIONS, POST");
+                exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
                 ObjectMapper mapper = new ObjectMapper();
                 String text = new BufferedReader(
                         new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8))
@@ -74,13 +92,22 @@ public class Main {
                     UserRepository repository = new UserRepository();
                     user = repository.getUser((String) map.get("username"), (String) map.get("password"));
                     if(user != null) {
-                        exchange.sendResponseHeaders(200, -1);
+                        String jsonUser = mapper.writeValueAsString(user);
+                        exchange.sendResponseHeaders(200, jsonUser.getBytes().length);
+                        output = exchange.getResponseBody();
+                        output.write(jsonUser.getBytes());
+                        output.flush();
                     } else {
                         exchange.sendResponseHeaders(400, -1);
                     }
                 } catch (IOException | SQLException e) {
                     e.printStackTrace();
                 }
+            } else if("OPTIONS".equals(exchange.getRequestMethod())) {
+                exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+                exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, OPTIONS, POST");
+                exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
+                exchange.sendResponseHeaders(200, -1);
             } else {
                 exchange.sendResponseHeaders(405, -1);
             }
@@ -97,6 +124,7 @@ public class Main {
         }));
         server.createContext("/questionnaire", (exchange -> {
             if ("POST".equals(exchange.getRequestMethod())) {
+                exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
                 ObjectMapper mapper = new ObjectMapper();
                 OutputStream output;
                 String text = new BufferedReader(
@@ -125,6 +153,7 @@ public class Main {
         }));
         server.createContext("/questionnaires", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
+                exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
                 ObjectMapper mapper = new ObjectMapper();
                 StringWriter writer =new StringWriter();
                 IQuestionnaireRepository questionnaireRepository = new QuestionnaireRepository();
@@ -205,6 +234,7 @@ public class Main {
         }));
         server.createContext("/intermediate", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
+                exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
                 OutputStream output;
                 try {
                     IQuestionnaireRepository questionnaireRepository = new AccountPermission(user, new QuestionnaireRepository());
@@ -232,6 +262,7 @@ public class Main {
         }));
         server.createContext("/beginner", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
+                exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
                 OutputStream output;
                 try {
                     IQuestionnaireRepository questionnaireRepository = new AccountPermission(user, new QuestionnaireRepository());
@@ -259,6 +290,7 @@ public class Main {
         }));
         server.createContext("/expert", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
+                exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
                 OutputStream output;
                 try {
                     IQuestionnaireRepository questionnaireRepository = new AccountPermission(user, new QuestionnaireRepository());
@@ -317,6 +349,9 @@ public class Main {
         server.createContext("/score", (exchange -> {
             if ("POST".equals(exchange.getRequestMethod())) {
                 ObjectMapper mapper = new ObjectMapper();
+                exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+                exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, OPTIONS, POST");
+                exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
                 OutputStream output;
                 String text = new BufferedReader(
                         new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8))
@@ -339,6 +374,11 @@ public class Main {
                     output.flush();
                     e.printStackTrace();
                 }
+            } else if("OPTIONS".equals(exchange.getRequestMethod())) {
+                exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+                exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, OPTIONS, POST");
+                exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
+                exchange.sendResponseHeaders(200, -1);
             } else {
                 exchange.sendResponseHeaders(405, -1);
             }

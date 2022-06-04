@@ -1,8 +1,11 @@
 package com.company.User;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class User {
     private int id;
     private String username;
+    @JsonIgnore
     private String password;
     private String email;
     private UserRoles role;
