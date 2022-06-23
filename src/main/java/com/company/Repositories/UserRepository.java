@@ -3,6 +3,7 @@ package com.company.Repositories;
 import com.company.User.User;
 import com.company.User.UserRoles;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,11 +13,11 @@ public class UserRepository {
     Connection connection = DBConnection.getDbConnection().getConnection();
     User user;
 
-    public UserRepository(User user) {
+    public UserRepository(User user) throws IOException {
         this.user = user;
     }
 
-    public UserRepository() {}
+    public UserRepository() throws IOException {}
 
     public boolean addUser() throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO quiz_game.user(username, password, email, role) VALUES(?, ?, ?, ?)");

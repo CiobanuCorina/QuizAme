@@ -2,6 +2,7 @@ package com.company;
 
 import com.company.User.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,7 @@ public class EventManager {
         if(subscribers.isEmpty()) listeners.remove(event);
     }
 
-    public void notifyListeners(String event, User user) {
+    public void notifyListeners(String event, User user) throws IOException {
         for (Subscriber subscriber : listeners.get(event)) {
             subscriber.update(user);
         }

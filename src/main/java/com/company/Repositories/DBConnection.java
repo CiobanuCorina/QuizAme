@@ -1,19 +1,27 @@
 package com.company.Repositories;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DBConnection {
     private static DBConnection dbConnection;
-    private String url = "jdbc:mysql://localhost:3306/quiz_game";
-    private String user = "root";
-    private String password = "";
+    private String url;
+    private String user;
+    private String password;
     private Connection connection;
 
-    private DBConnection() {}
+    private DBConnection() throws IOException {
+        Properties props = new Properties();
+        props.load(ClassLoader.getSystemResourceAsStream("config/db.properties"));
+        this.user = props.getProperty("user");
+        this.password = props.getProperty("password");
+        this.url = String.format("jdbc:mysql://%s:%s/%s", props.getProperty("server"), props.getProperty("port"), props.getProperty("database"));
+    }
 
-    public synchronized static DBConnection getDbConnection() {
+    public synchronized static DBConnection getDbConnection() throws IOException {
         if(DBConnection.dbConnection == null) {
             dbConnection = new DBConnection();
             dbConnection.connect();

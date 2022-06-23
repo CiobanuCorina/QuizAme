@@ -2,6 +2,7 @@ package com.company.Repositories;
 
 import com.company.*;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,11 +16,11 @@ public class QuestionnaireRepository implements IQuestionnaireRepository
     Connection connection = DBConnection.getDbConnection().getConnection();
     IQuestionnaire questionnaire;
 
-    public QuestionnaireRepository(IQuestionnaire questionnaire) {
+    public QuestionnaireRepository(IQuestionnaire questionnaire) throws IOException {
         this.questionnaire = questionnaire;
     }
 
-    public QuestionnaireRepository(){}
+    public QuestionnaireRepository() throws IOException {}
     @Override
     public boolean addQuestionnaire() throws SQLException, IllegalAccessException {
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO quiz_game.questionnaire(name) VALUES(?)");
